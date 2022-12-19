@@ -22,6 +22,7 @@
         systemctl status firewalld
 
 разрешаем в firewall доступ к сервисам NFS
+
         firewall-cmd --add-service="nfs3" \
         --add-service="rpc-bind" \
         --add-service="mountd" \
@@ -108,6 +109,7 @@ exportfs - ведение таблицы экспортированных фай
         echo "192.168.50.10:/srv/share/ /mnt nfs vers=3,proto=udp,noauto,x-systemd.automount 0 0" >> /etc/fstab
 
 и запускаем вот это :
+
         systemctl daemon-reload
         systemctl restart remote-fs.target
 
@@ -122,9 +124,12 @@ systemd units в каталоге `/run/systemd/generator/`, которые пр
 и видим что ничего не примонтировалось. 
 При подробном расследовании оказалось что при записи в /etc/fstab строка  x-systemd.automount скопировалась без дефиса. 
 x-systemd.automount Это функция автомонтирования обязательно ее изучи.
+
 /etc/systemd/system/ здесь опции монтирования. 
+
 ну и это до кучи 
 man systemd-fstab-generator
+
 исправляем проверяем получаем:
 
         systemd-1 on /mnt type autofs (rw,relatime,fd=25,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=20721)
@@ -156,6 +161,11 @@ man systemd-fstab-generator
 - проверяем наличие ранее созданных файлов
 - создаём тестовыйфайл `touch final_check`
 - проверяем, что файл успешно создан
+
+После этого создаем два  bash-скрипта, `nfss_script.sh` и `nfsc_script.sh` 
+Уничтожаем тестовый стенд командой `vagrant destory -f` 
+И снова создаем виртуальные машины. 
+После загрузки проверяем что скрипты отработали и машины настроены. 
 
 
 
